@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"D:\\UnrealProjects\\unreal-engine4-cpp-the-ultimate-shooter-course\\ShooterCourse\\Source\\ShooterCourse\\ShooterCourse.Build.cs",
+		"D:\\UnrealProjects\\unreal-engine4-cpp-the-ultimate-shooter-course\\ShooterCourse\\Source\\ShooterCourse.Target.cs",
+		"D:\\UnrealProjects\\unreal-engine4-cpp-the-ultimate-shooter-course\\ShooterCourse\\Source\\ShooterCourseEditor.Target.cs"
+	],
+	"EngineVersion": "4.27.2"
+}

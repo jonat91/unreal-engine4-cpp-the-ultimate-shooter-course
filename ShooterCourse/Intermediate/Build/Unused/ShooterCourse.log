@@ -1,0 +1,12 @@
+﻿  Using 'git status' to determine working set for adaptive non-unity build (D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course).
+  Building ShooterCourseEditor...
+  Using Visual Studio 2022 14.38.33135 toolchain (C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  Building 4 actions with 12 processes...
+    [1/4] ShooterCharacter.cpp
+    [2/4] UE4Editor-ShooterCourse-0017.lib
+       Creating library D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\UE4Editor-ShooterCourse-0017.lib and object D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\UE4Editor-ShooterCourse-0017.exp
+    [3/4] UE4Editor-ShooterCourse-0017.dll
+       Creating library D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\UE4Editor-ShooterCourse-0017.suppressed.lib and object D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\UE4Editor-ShooterCourse-0017.suppressed.exp
+    [4/4] ShooterCourseEditor.target
+  Total time in Parallel executor: 1.56 seconds
+  Total execution time: 2.21 seconds

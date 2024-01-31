@@ -1,0 +1,2 @@
+D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\Definitions.ShooterCourse.h
+D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Source\ShooterCourse\ShooterCourse.h
