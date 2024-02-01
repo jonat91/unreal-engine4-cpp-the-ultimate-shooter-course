@@ -1,0 +1,5 @@
+D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\Definitions.ShooterCourse.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/GeneratedCppIncludes.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/MetaData.h
+D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Source\ShooterCourse/ShooterAnimInstance.h
+D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Inc\ShooterCourse\ShooterAnimInstance.generated.h
