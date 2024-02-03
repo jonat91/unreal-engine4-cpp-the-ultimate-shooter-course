@@ -32,4 +32,12 @@ private:
 	/** whether or not the character is moving */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement, meta=(AllowPrivateAccess="true"))
 	bool bIsAccelerating;
+
+	/** whether or not the character is moving */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement, meta=(AllowPrivateAccess="true"))
+	float MovementOffsetYaw;
+
+	/** offset yaw the frame before we stopped */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Movement, meta=(AllowPrivateAccess="true"))
+	float LastMovementOffsetYaw;
 };
