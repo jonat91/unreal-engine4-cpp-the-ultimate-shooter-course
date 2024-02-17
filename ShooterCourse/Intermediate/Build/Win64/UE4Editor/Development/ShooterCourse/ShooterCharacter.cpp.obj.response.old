@@ -262,8 +262,11 @@
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\winrt"
+/FI"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\ShooterCourseEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Yu"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\ShooterCourseEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\ShooterCourseEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
 "D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Source\ShooterCourse\ShooterCharacter.cpp"
-/FI"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\Definitions.h"
+/FI"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\Definitions.ShooterCourse.h"
 /Fo"D:\UnrealProjects\unreal-engine4-cpp-the-ultimate-shooter-course\ShooterCourse\Intermediate\Build\Win64\UE4Editor\Development\ShooterCourse\ShooterCharacter.cpp.obj"
 /TP
 /GR-

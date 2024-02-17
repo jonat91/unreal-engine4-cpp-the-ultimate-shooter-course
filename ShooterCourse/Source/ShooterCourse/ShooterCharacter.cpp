@@ -14,8 +14,26 @@
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
+	// base rates for turning/looking up
 	BaseTurnRate(45.f),
-	BaseLookUpRate(45.f)
+	BaseLookUpRate(45.f),
+	// camera field of view values
+	CameraDefaultFOV(0.f), // set in begin play
+	CameraZoomedFOV(35.f/*60.f*/),
+	CameraCurrentFOV(0.f),
+	ZoomInterpSpeed(20.f),
+	// true when aiming the weapon
+	bAiming(false),
+	// turn rate for aiming/not aiming
+	HipTurnRate(90.f),
+	HipLookUpRate(90.f),
+	AimingTurnRate(20.f),
+	AimingLookUpRate(20.f),
+	// mouse look sensitivity scale factors
+	MouseHipTurnRate(1.f),
+	MouseHipLookUpRate(1.f),
+	MouseAimingTurnRate(0.2f),
+	MouseAimingLookUpRate(0.2f)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -23,9 +41,9 @@ AShooterCharacter::AShooterCharacter() :
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; // the camera follows at this distance behind the character
+	CameraBoom->TargetArmLength = 180.f; /*300.0f;*/ // the camera follows at this distance behind the character
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-	CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
+	CameraBoom->SocketOffset = FVector(0.f, 50.f, 70.f /*50.f*/);
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom); // Attach the camera to the end of the boom
@@ -49,6 +67,12 @@ void AShooterCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	// LogData();
+
+	if (FollowCamera != nullptr)
+	{
+		CameraDefaultFOV = GetFollowCamera()->FieldOfView;
+		CameraCurrentFOV = CameraDefaultFOV;
+	}
 }
 
 // Called every frame
@@ -56,6 +80,12 @@ void AShooterCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// handle interpolation for zoom when aiming
+	CameraInterpZoom(DeltaTime);
+	// Change look rates based on aiming
+	SetLookRates();
+	// calculate crosshair spread
+	CalculateCrosshairSpread(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -70,13 +100,21 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("TurnRate", this, &AShooterCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AShooterCharacter::LookUpRate);
 
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("Turn", this, &AShooterCharacter::Turn /*&APawn::AddControllerYawInput*/);
+	PlayerInputComponent->BindAxis("LookUp", this, &AShooterCharacter::LookUp /*&APawn::AddControllerPitchInput*/);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("FireButton", IE_Pressed, this, &AShooterCharacter::FireWeapon);
+
+	PlayerInputComponent->BindAction("AimingButton", IE_Pressed, this, &AShooterCharacter::AimingButtonPressed);
+	PlayerInputComponent->BindAction("AimingButton", IE_Released, this, &AShooterCharacter::AimingButtonReleased);
+}
+
+float AShooterCharacter::GetCrosshairSpreadMultiplier() const
+{
+	return CrosshairSpreadMultiplier;
 }
 
 // Log data types
@@ -153,6 +191,38 @@ void AShooterCharacter::LookUpRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds()); //deg/sec * sec/frame
+}
+
+void AShooterCharacter::Turn(float Value)
+{
+	float turnScaleFactor{ 1.f };
+	if (bAiming)
+	{
+		turnScaleFactor = MouseAimingTurnRate;
+		
+	}
+	else
+	{
+		turnScaleFactor = MouseHipTurnRate;
+	}
+
+	AddControllerYawInput(Value * turnScaleFactor);
+}
+
+void AShooterCharacter::LookUp(float Value)
+{
+	float turnScaleFactor{ 1.f };
+	if (bAiming)
+	{
+		turnScaleFactor = MouseAimingLookUpRate;
+		
+	}
+	else
+	{
+		turnScaleFactor = MouseHipLookUpRate;
+	}
+
+	AddControllerPitchInput(Value * turnScaleFactor);
 }
 
 void AShooterCharacter::FireWeapon()
@@ -257,4 +327,68 @@ bool AShooterCharacter::GetBeamEndLocation(const FVector MuzzleSocketLocation, F
 	}
 
 	return false;
+}
+
+void AShooterCharacter::AimingButtonPressed()
+{
+	bAiming = true;
+	/*GetFollowCamera()->SetFieldOfView(CameraZoomedFOV);*/
+}
+
+void AShooterCharacter::AimingButtonReleased()
+{
+	bAiming = false;
+	//GetFollowCamera()->SetFieldOfView(CameraDefaultFOV);
+}
+
+void AShooterCharacter::CameraInterpZoom(float DeltaTime)
+{
+	// set current camera field of view
+	if (bAiming)
+	{
+		// interpolate to zoomed fov
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraZoomedFOV, DeltaTime, ZoomInterpSpeed);
+	}
+	else
+	{
+		// interpolate to default fov
+		CameraCurrentFOV = FMath::FInterpTo(CameraCurrentFOV, CameraDefaultFOV, DeltaTime, ZoomInterpSpeed);
+	}
+
+	GetFollowCamera()->SetFieldOfView(CameraCurrentFOV);
+}
+
+void AShooterCharacter::SetLookRates()
+{
+	if (bAiming)
+	{
+		BaseTurnRate = AimingTurnRate;
+		BaseLookUpRate = AimingLookUpRate;
+	}
+	else
+	{
+		BaseTurnRate = HipTurnRate;
+		BaseLookUpRate = HipLookUpRate;
+	}
+}
+
+void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
+{
+	FVector2D WalkSpeedRange{ 0.f, 600.f };
+	FVector2D VelocityMultiplierRange{ 0.f, 1.f };
+	// FVector2D Velocity{ GetVelocity() };
+	FVector Velocity{ GetVelocity() };
+	Velocity.Z = 0.f; // ignore vertical movement
+
+	/** GetMappedRangeValueClamped example:
+	 * WalkSpeedRange == 300.f
+	 * VelocityMultiplierRange = 0.5f
+	 */
+	CrosshairVelocityFactor = FMath::GetMappedRangeValueClamped(
+		WalkSpeedRange,
+		VelocityMultiplierRange,
+		Velocity.Size());
+
+	CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+	
 }
